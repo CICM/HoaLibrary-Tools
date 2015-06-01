@@ -1,0 +1,3 @@
+[submodule "ThirdParty/Libsndfile"]
+	path = ThirdParty/Libsndfile
+	url = https://github.com/erikd/libsndfile.git
