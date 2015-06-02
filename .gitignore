@@ -2,4 +2,12 @@
 ThirdParty/Listen/*
 !ThirdParty/Listen/readme.txt
 
+# Mac OsX
+xcuserdata/
+xcshareddata/
+*.build/
+*.gcda
+.DS_Store
+*.mode1V3
+*.pbxuser
 
