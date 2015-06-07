@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 PierreGuillot. All rights reserved.
 //
 
-#include "../../Sources/Hrir.hpp"
+#include "../Sources/Hrir.hpp"
 
 using namespace hoa;
 using namespace std;

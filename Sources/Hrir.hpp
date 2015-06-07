@@ -38,6 +38,7 @@ namespace hoa
                 cout << file + " can't be loaded\n";
             }
         }
+        
         inline Response(Response const& other) noexcept
         {
             m_radius = other.m_radius;
@@ -45,6 +46,7 @@ namespace hoa
             m_elevation = other.m_elevation;
             m_datas = other.m_datas;
         }
+        
         inline Response(Response&& other) noexcept
         {
             swap(m_radius, other.m_radius);
@@ -52,6 +54,7 @@ namespace hoa
             swap(m_elevation, other.m_elevation);
             m_datas.swap(other.m_datas);
         }
+        
         inline ~Response() noexcept {m_datas.clear();};
         inline T getRadius() const noexcept {return m_radius;}
         inline T getAzimuth() const noexcept {return m_azimuth;}
@@ -73,8 +76,8 @@ namespace hoa
     public:
         Subject(const Folder& folder) noexcept : m_folder(folder), m_size(0ul)
         {
-            vector<string> waves(m_folder.getWaves());
-            for(auto it : waves)
+            vector<string> files(m_folder.getWaveFiles());
+            for(auto it : files)
             {
                 m_responses.push_back(Response<T>(it));
                 if(m_size < m_responses[m_responses.size()-1].getSize())

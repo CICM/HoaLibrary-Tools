@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8FF2B1B31B1D7EDE00C4CE12 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8FF2B1B21B1D7EDE00C4CE12 /* main.cpp */; };
+		8F91857C1B24615900104398 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F91857B1B24615900104398 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,8 +25,8 @@
 /* Begin PBXFileReference section */
 		8F9185791B24409900104398 /* Hrir.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hrir.hpp; sourceTree = "<group>"; };
 		8F91857A1B2443FC00104398 /* Wave.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Wave.hpp; sourceTree = "<group>"; };
-		8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HoaBinauralMatrixCreator; sourceTree = BUILT_PRODUCTS_DIR; };
-		8FF2B1B21B1D7EDE00C4CE12 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8F91857B1B24615900104398 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator.app */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HoaBinauralMatrixCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,7 @@
 		8FF2B1B01B1D7EDE00C4CE12 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator */,
+				8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -69,7 +69,7 @@
 		8FF2B1B11B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator */ = {
 			isa = PBXGroup;
 			children = (
-				8FF2B1B21B1D7EDE00C4CE12 /* main.cpp */,
+				8F91857B1B24615900104398 /* main.cpp */,
 				8F9185781B24409900104398 /* Sources */,
 			);
 			path = HoaBinauralMatrixCreator;
@@ -92,7 +92,7 @@
 			);
 			name = HoaBinauralMatrixCreator;
 			productName = HoaBinauralMatrixCreator;
-			productReference = 8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator */;
+			productReference = 8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator.app */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -131,7 +131,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8FF2B1B31B1D7EDE00C4CE12 /* main.cpp in Sources */,
+				8F91857C1B24615900104398 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,22 +218,34 @@
 		8FF2B1B71B1D7EDF00C4CE12 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				EXECUTABLE_EXTENSION = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = $SRCROOT/;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/Libsndfile/src/.libs",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME).app";
+				WRAPPER_EXTENSION = "";
 			};
 			name = Debug;
 		};
 		8FF2B1B81B1D7EDF00C4CE12 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				EXECUTABLE_EXTENSION = "";
+				GCC_OPTIMIZATION_LEVEL = 3;
+				INSTALL_PATH = $SRCROOT/;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/Libsndfile/src/.libs",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME).app";
+				WRAPPER_EXTENSION = "";
 			};
 			name = Release;
 		};
