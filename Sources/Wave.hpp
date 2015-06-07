@@ -7,17 +7,14 @@
 #ifndef DEF_HOA_WAVE_LIGHT
 #define DEF_HOA_WAVE_LIGHT
 
-#include <cmath>
 #include <iostream>
-#include <vector>
 #include <dirent.h>
+#include "../ThirdParty/HoaLibrary/Sources/Hoa.hpp"
 
 using namespace std;
 
 namespace hoa
 {
-    typedef unsigned long ulong;
-    
     class Folder
     {
     private:
@@ -62,7 +59,11 @@ namespace hoa
                 {
                     if(isWave(*ent))
                     {
-                        files.push_back(getFullPath() + ent->d_name);
+#ifdef _WIN32
+                        files.push_back(getFullPath() + "\\" + ent->d_name);
+#else
+                        files.push_back(getFullPath() + "/" + ent->d_name);
+#endif
                     }
                 }
                 closedir(dir);
@@ -70,7 +71,7 @@ namespace hoa
             return files;
         }
             
-        static inline vector<Folder> get(string const& path)
+        static inline vector<Folder> get(string const& path) noexcept
         {
             vector<Folder> folders;
             DIR *dir;
@@ -99,17 +100,9 @@ namespace hoa
     //! The wave file class loads and stores the samples of a wave file.
     /** The wave file class loads and stores the samples of a wave file.
      */
-    class WaveFile
+    template<typename T> class WaveFile
     {
     private:
-        class Error : public exception
-        {
-        public:
-            inline Error() noexcept {};
-            inline ~Error() noexcept {};
-            const char* what() const noexcept override {return "can't load the file.";}
-        };
-        
         char  m_chunk_id[4];
         ulong m_chunk_size;
         char  m_format[4];
@@ -123,7 +116,7 @@ namespace hoa
         short m_bits_per_samples;
         char  m_subchunk_id2[4];
         ulong m_subchunk_size2;
-        vector<double> m_datas;
+        vector<T> m_datas;
         bool  m_loaded;
     public:
         inline WaveFile() noexcept : m_loaded(false) {}
@@ -134,7 +127,8 @@ namespace hoa
         inline ulong getNumberOfSamplesPerChannel() const noexcept {return getNumberOfSamples()/getNumberOfChannels();}
         inline bool isCompressed() const noexcept {return m_compressed != 1;}
         inline bool isLoaded() const noexcept {return m_loaded;}
-        inline void read(string const& path)
+        inline void swap(vector<T>& datas) noexcept {datas.swap(m_datas); m_loaded = false;}
+        inline void read(string const& path) noexcept
         {
             m_loaded = false;
             FILE* file;
@@ -161,16 +155,13 @@ namespace hoa
                 for(ulong i = 0; i < getNumberOfSamples(); i++)
                 {
                     fread(sample, m_bytes_per_samples, 1, file);
-                    m_datas[i]  = double(sample[0]) / pow(2. ,15);
+                    m_datas[i]  = T(sample[0]) / pow(2. ,15);
                 }
                 delete [] sample;
                 m_loaded = true;
             }
-            else
-            {
-                throw Error();
-            }
         }
+        
     };
 }
 
