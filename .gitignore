@@ -12,6 +12,7 @@ xcshareddata/
 *.pbxuser
 
 *.exe
+*.exec
 *.out
 *.app
 
@@ -30,7 +31,6 @@ xcshareddata/
 *.dylib
 *.dll
 
-*.unix
 
 
 
