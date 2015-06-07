@@ -221,14 +221,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				DSTROOT = /;
 				EXECUTABLE_EXTENSION = "";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = $SRCROOT/;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/Libsndfile/src/.libs",
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME).app";
 				WRAPPER_EXTENSION = "";
 			};
@@ -238,14 +236,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				DSTROOT = /;
 				EXECUTABLE_EXTENSION = "";
 				GCC_OPTIMIZATION_LEVEL = 3;
 				INSTALL_PATH = $SRCROOT/;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/Libsndfile/src/.libs",
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME).app";
 				WRAPPER_EXTENSION = "";
 			};

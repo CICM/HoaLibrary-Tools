@@ -62,7 +62,7 @@ namespace hoa
         
         static inline bool isType(const string& name, const string& type) noexcept
         {
-            return name.size() >= type.size() && !type.compare(name.size() - type.size(),type.size(), name);
+            return 1;//name.size() >= type.size() && !type.compare(name.size() - type.size(),type.size(), name);
         }
         
         static inline bool isFolder(const string& name) noexcept
@@ -92,60 +92,73 @@ namespace hoa
         private:
             string m_name;
             string m_path;
-            public:
-                inline Folder(const string& path, const string& name) noexcept : m_name(formatName(name)), m_path(formatPath(path)) {}
-                inline Folder(const Folder& other) noexcept : m_name(other.getName()), m_path(other.getPath()) {}
-                inline Folder(Folder&& other) noexcept {m_name.swap(other.m_name); m_path.swap(other.m_path);}
-                inline string getName() const noexcept {return m_name;}
-                inline string getPath() const noexcept {return m_path;}
-                inline string getFullName() const noexcept {return m_path + m_name;}
-                inline vector<File> getFiles(const string& type) const noexcept
-                {
-                    vector<File> files; DIR *dir;
-                    if((dir = opendir(getFullName().c_str())) != NULL)
-                    {
-                        struct dirent *ent;
-                        while((ent = readdir(dir)) != NULL)
-                        {
-                            if(type.empty() && !isFolder(ent->d_name))
-                            {
-                                files.push_back(File(getFullName(), ent->d_name, type));
-                            }
-                            else if(!isFolder(ent->d_name) && isType(ent->d_name, type))
-                            {
-                                files.push_back(File(getFullName(), ent->d_name, type));
-                            }
-                        }
-                        closedir(dir);
-                    }
-                    return files;
-                }
-            };
-            
-            static inline vector<Folder> getFolders(string const& path) noexcept
+        public:
+            inline Folder(const string& path, const string& name) noexcept : m_name(formatName(name)), m_path(formatPath(path)) {}
+            inline Folder(const Folder& other) noexcept : m_name(other.getName()), m_path(other.getPath()) {}
+            inline Folder(Folder&& other) noexcept {m_name.swap(other.m_name); m_path.swap(other.m_path);}
+            inline string getName() const noexcept {return m_name;}
+            inline string getPath() const noexcept {return m_path;}
+            inline string getFullName() const noexcept {return m_path + m_name;}
+            inline vector<File> getFiles(const string& type) const noexcept
             {
-                vector<Folder> folders; DIR *dir;
-                if((dir = opendir(path.c_str())) != NULL)
+                vector<File> files; DIR *dir;
+                if((dir = opendir(getFullName().c_str())) != NULL)
                 {
                     struct dirent *ent;
                     while((ent = readdir(dir)) != NULL)
                     {
-                        if(isFolder(ent->d_name))
+                        if(type.empty() && !isFolder(ent->d_name))
                         {
-                            folders.push_back(Folder(path, ent->d_name));
+                            files.push_back(File(getFullName(), ent->d_name, type));
+                        }
+                        else if(!isFolder(ent->d_name) && isType(ent->d_name, type))
+                        {
+                            files.push_back(File(getFullName(), ent->d_name, type));
                         }
                     }
                     closedir(dir);
                 }
-                else
-                {
-                    cerr << "No such folder " + path + "\n";
-                }
-                return folders;
+                return files;
             }
+        };
+    
+        static inline string getCurrentFolder() noexcept
+        {
+            char cwd[1024];
+            if(getcwd(cwd, sizeof(cwd)) != NULL)
+            {
+               return cwd;
+            }
+            else
+            {
+                 return "";
+            }
+        }
+        
+        static inline vector<Folder> getFolders(string const& path) noexcept
+        {
+            vector<Folder> folders; DIR *dir;
+            if((dir = opendir(path.c_str())) != NULL)
+            {
+                struct dirent *ent;
+                while((ent = readdir(dir)) != NULL)
+                {
+                    if(isFolder(ent->d_name))
+                    {
+                        folders.push_back(Folder(path, ent->d_name));
+                    }
+                }
+                closedir(dir);
+            }
+            else
+            {
+                cerr << "No such folder " + path + "\n";
+            }
+            return folders;
+        }
 
     };
-                            
+                
     static inline ostream& operator<<(ostream& os, System::File const& file)
     {
         os << file.getFullName();

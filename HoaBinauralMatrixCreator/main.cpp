@@ -14,13 +14,9 @@ typedef float sample;
 
 int main(int argc, const char * argv[])
 {
+    cout << "Current folder : " << System::getCurrentFolder() << "\n";
     Decoder<Hoa2d, double>::Regular Decoder2D(5, 11);
     vector<Subject<sample>> subject;
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-        fprintf(stdout, "Current working dir: %s\n", cwd);
-    else
-        perror("getcwd() error");
     
     vector<System::Folder> folders(System::getFolders("../ThirdParty/Listen"));
     for(auto it : folders)
