@@ -23,6 +23,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8F9185791B24409900104398 /* Hrir.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hrir.hpp; sourceTree = "<group>"; };
+		8F91857A1B2443FC00104398 /* Wave.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Wave.hpp; sourceTree = "<group>"; };
 		8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HoaBinauralMatrixCreator; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FF2B1B21B1D7EDE00C4CE12 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -38,6 +40,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8F9185781B24409900104398 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				8F91857A1B2443FC00104398 /* Wave.hpp */,
+				8F9185791B24409900104398 /* Hrir.hpp */,
+			);
+			name = Sources;
+			path = ../../Sources;
+			sourceTree = "<group>";
+		};
 		8FF2B1A61B1D7EDE00C4CE12 = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				8FF2B1B21B1D7EDE00C4CE12 /* main.cpp */,
+				8F9185781B24409900104398 /* Sources */,
 			);
 			path = HoaBinauralMatrixCreator;
 			sourceTree = "<group>";
@@ -205,6 +218,10 @@
 		8FF2B1B71B1D7EDF00C4CE12 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/Libsndfile/src/.libs",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -212,6 +229,10 @@
 		8FF2B1B81B1D7EDF00C4CE12 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/Libsndfile/src/.libs",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -235,6 +256,7 @@
 				8FF2B1B81B1D7EDF00C4CE12 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
