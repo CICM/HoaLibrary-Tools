@@ -70,20 +70,22 @@ namespace hoa
     template<typename T> class Subject
     {
     private:
-        const Folder        m_folder;
-        vector<Response<T>> m_responses;
-        ulong               m_size;
+        const System::Folder m_folder;
+        vector<Response<T>>  m_responses;
+        ulong                m_size;
     public:
-        Subject(const Folder& folder) noexcept : m_folder(folder), m_size(0ul)
+        Subject(const System::Folder& folder) noexcept : m_folder(folder), m_size(0ul)
         {
-            vector<string> files(m_folder.getWaveFiles());
+            vector<System::File> files(m_folder.getFiles(".wav"));
             for(auto it : files)
             {
+                /*
                 m_responses.push_back(Response<T>(it));
                 if(m_size < m_responses[m_responses.size()-1].getSize())
                 {
                     m_size = m_responses[m_responses.size()-1].getSize();
                 }
+                 */
             }
         }
         

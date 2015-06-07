@@ -16,7 +16,13 @@ int main(int argc, const char * argv[])
 {
     Decoder<Hoa2d, double>::Regular Decoder2D(5, 11);
     vector<Subject<sample>> subject;
-    vector<Folder> folders(Folder::get("/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/Listen/"));
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        fprintf(stdout, "Current working dir: %s\n", cwd);
+    else
+        perror("getcwd() error");
+    
+    vector<System::Folder> folders(System::getFolders("../ThirdParty/Listen"));
     for(auto it : folders)
     {
         subject.push_back(Subject<sample>(it));
@@ -25,8 +31,8 @@ int main(int argc, const char * argv[])
     {
         cout << it.getName() << "\n";
     }
-    //double harmonics_2D[5 * 2 + 1];
     
+    //double harmonics_2D[5 * 2 + 1];
     cout << "end \n";
     return 0;
 }

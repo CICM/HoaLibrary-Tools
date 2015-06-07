@@ -26,6 +26,7 @@
 		8F9185791B24409900104398 /* Hrir.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hrir.hpp; sourceTree = "<group>"; };
 		8F91857A1B2443FC00104398 /* Wave.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Wave.hpp; sourceTree = "<group>"; };
 		8F91857B1B24615900104398 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		8F91857D1B24685B00104398 /* System.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = System.hpp; sourceTree = "<group>"; };
 		8FF2B1AF1B1D7EDE00C4CE12 /* HoaBinauralMatrixCreator.app */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HoaBinauralMatrixCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -44,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				8F91857A1B2443FC00104398 /* Wave.hpp */,
+				8F91857D1B24685B00104398 /* System.hpp */,
 				8F9185791B24409900104398 /* Hrir.hpp */,
 			);
 			name = Sources;
