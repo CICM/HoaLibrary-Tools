@@ -8,6 +8,7 @@
 #define DEF_HOA_SYSTEM_LIGHT
 
 #include <iostream>
+#include <fstream>
 #include <dirent.h>
 #include "../ThirdParty/HoaLibrary/Sources/Hoa.hpp"
 
@@ -62,7 +63,7 @@ namespace hoa
         
         static inline bool isType(const string& name, const string& type) noexcept
         {
-            return 1;//name.size() >= type.size() && !type.compare(name.size() - type.size(),type.size(), name);
+            return type.empty() || formatType(name) == type;
         }
         
         static inline bool isFolder(const string& name) noexcept
@@ -74,49 +75,77 @@ namespace hoa
         class File
         {
         private:
+            FILE*  m_file;
             string m_name;
             string m_type;
             string m_path;
+        protected:
+            inline FILE* getPtr() const noexcept {return m_file;};
         public:
-            inline File(const string& path, const string& name, const string& type) noexcept : m_name(formatName(name)), m_path(formatPath(path)), m_type(formatType(type)) {}
-            inline File(const File& other) noexcept : m_name(other.getName()), m_path(other.getPath()), m_type(other.getType()) {}
-            inline File(File&& other) noexcept {m_name.swap(other.m_name); m_path.swap(other.m_path); m_type.swap(m_type);}
+            inline File(const string& path, const string& name, const string& type) noexcept :
+            m_name(formatName(name)), m_path(formatPath(path)), m_type(formatType(type))
+            {
+                m_file = fopen(getFullName().c_str(), "r");
+            }
+            inline File(const File& other) noexcept :
+            m_name(other.getName()), m_path(other.getPath()), m_type(other.getType())
+            {
+                m_file = fopen(getFullName().c_str(), "r");
+            }
+            inline File(File&& other) noexcept : m_file(nullptr)
+            {
+                m_name.swap(other.m_name); m_path.swap(other.m_path); m_type.swap(other.m_type), swap(m_file, other.m_file);
+            }
+            virtual ~File() noexcept {}
             inline string getName() const noexcept {return m_name;}
             inline string getPath() const noexcept {return m_path;}
             inline string getType() const noexcept {return m_type;}
             inline string getFullName() const noexcept {return m_path + m_name + m_type;}
+            virtual inline bool isValid() const noexcept {return bool(m_file);}
+            static inline string getExtension() noexcept {return "";}
+            class Wave;
         };
             
         class Folder
         {
         private:
+            DIR*   m_dir;
             string m_name;
             string m_path;
         public:
-            inline Folder(const string& path, const string& name) noexcept : m_name(formatName(name)), m_path(formatPath(path)) {}
-            inline Folder(const Folder& other) noexcept : m_name(other.getName()), m_path(other.getPath()) {}
-            inline Folder(Folder&& other) noexcept {m_name.swap(other.m_name); m_path.swap(other.m_path);}
+            inline Folder(const string& path, const string& name) noexcept :
+            m_name(formatName(name)), m_path(formatPath(path))
+            {
+                m_dir = opendir(getFullName().c_str());
+            }
+            inline Folder(const Folder& other) noexcept :
+            m_name(other.getName()), m_path(other.getPath())
+            {
+                m_dir = opendir(getFullName().c_str());
+            }
+            inline Folder(Folder&& other) noexcept : m_dir(nullptr)
+            {
+                m_name.swap(other.m_name); m_path.swap(other.m_path); swap(m_dir, other.m_dir);
+            }
+            inline ~Folder(){if(m_dir){closedir(m_dir);};}
             inline string getName() const noexcept {return m_name;}
             inline string getPath() const noexcept {return m_path;}
             inline string getFullName() const noexcept {return m_path + m_name;}
+            inline bool isValid() const noexcept {return bool(m_dir);}
             inline vector<File> getFiles(const string& type) const noexcept
             {
-                vector<File> files; DIR *dir;
-                if((dir = opendir(getFullName().c_str())) != NULL)
+                vector<File> files;
+                if(isValid())
                 {
                     struct dirent *ent;
-                    while((ent = readdir(dir)) != NULL)
+                    while((ent = readdir(m_dir)) != NULL)
                     {
-                        if(type.empty() && !isFolder(ent->d_name))
-                        {
-                            files.push_back(File(getFullName(), ent->d_name, type));
-                        }
-                        else if(!isFolder(ent->d_name) && isType(ent->d_name, type))
+                        if(!isFolder(ent->d_name) && isType(ent->d_name, type))
                         {
                             files.push_back(File(getFullName(), ent->d_name, type));
                         }
                     }
-                    closedir(dir);
+                    rewinddir(m_dir);
                 }
                 return files;
             }
@@ -156,7 +185,6 @@ namespace hoa
             }
             return folders;
         }
-
     };
                 
     static inline ostream& operator<<(ostream& os, System::File const& file)
