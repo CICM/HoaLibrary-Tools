@@ -26,9 +26,9 @@ int main(int argc, const char * argv[])
     }
     for(auto it : subject)
     {
-        cout << it.getName() << " : ";
-        cout << it.getNumberOfResponses() << "\n";
+        it.write("matrix.hpp");
     }
+    /*
     //cout.setf(std::ios::scientific | std:: ios::showpoint);
     cout.precision(numeric_limits<long double>::digits10);
     cout << numeric_limits<sample>::digits << " "<< 1.999999000087543210123456l;
@@ -39,5 +39,6 @@ int main(int argc, const char * argv[])
     long double d = 3.141592653589790001l;
     cout.precision(dbl::digits10);
     cout << "Pi: " << fixed << d << endl;
+     */
     return 0;
 }

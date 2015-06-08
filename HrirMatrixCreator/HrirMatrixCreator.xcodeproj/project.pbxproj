@@ -25,9 +25,8 @@
 /* Begin PBXFileReference section */
 		8F4DC75F1B258CFE0050A443 /* HrirMatrixCreator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HrirMatrixCreator; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F4DC7691B258D270050A443 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
-		8F4DC76D1B258D790050A443 /* Hrir.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hrir.hpp; sourceTree = "<group>"; };
-		8F4DC76E1B258D790050A443 /* System.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = System.hpp; sourceTree = "<group>"; };
-		8F4DC76F1B258D790050A443 /* Wave.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Wave.hpp; sourceTree = "<group>"; };
+		8F4DC7711B258E540050A443 /* Hrir.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Hrir.hpp; path = ../Sources/Hrir.hpp; sourceTree = "<group>"; };
+		8F4DC7721B258E540050A443 /* System.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = System.hpp; path = ../Sources/System.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,17 +60,16 @@
 			isa = PBXGroup;
 			children = (
 				8F4DC7691B258D270050A443 /* main.cpp */,
-				8F4DC76C1B258D790050A443 /* Sources */,
+				8F4DC7701B258E540050A443 /* Sources */,
 			);
 			path = HrirMatrixCreator;
 			sourceTree = "<group>";
 		};
-		8F4DC76C1B258D790050A443 /* Sources */ = {
+		8F4DC7701B258E540050A443 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				8F4DC76D1B258D790050A443 /* Hrir.hpp */,
-				8F4DC76E1B258D790050A443 /* System.hpp */,
-				8F4DC76F1B258D790050A443 /* Wave.hpp */,
+				8F4DC7711B258E540050A443 /* Hrir.hpp */,
+				8F4DC7721B258E540050A443 /* System.hpp */,
 			);
 			name = Sources;
 			path = ../../Sources;
