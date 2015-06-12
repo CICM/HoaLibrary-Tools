@@ -99,7 +99,6 @@ namespace hoa
             inline string getFullName() const noexcept {return m_path + m_name + m_type;}
             virtual inline bool isValid() const noexcept {return System::isValid(getFullName());}
             static inline string getExtension() noexcept {return "";}
-            class Wave;
         };
             
         class Folder
@@ -166,7 +165,7 @@ namespace hoa
             }
             else
             {
-                //cerr << "No such folder " + path + "\n";
+                cerr << "No such folder " + path + "\n";
             }
             return folders;
         }

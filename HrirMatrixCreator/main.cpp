@@ -6,42 +6,35 @@
 //  Copyright (c) 2015 PierreGuillot. All rights reserved.
 //
 
-#include "../Sources/Hrir.hpp"
+#include "../Sources/HrirCreator.hpp"
 #include <climits>
+#include <vector>
+
 using namespace hoa;
 using namespace std;
-static const Dimension dim      = Hoa2d;
-static const ulong     order    = 5;
 
 int main(int argc, const char * argv[])
 {
     cout << "Current folder : " << System::getCurrentFolder() << "\n";
-    vector<Subject<dim>> subject;
+    vector< hoa::Subject< Hoa2d > > sujets2D;
+    vector< hoa::Subject< Hoa3d > > sujets3D;
     
     vector<System::Folder> folders(System::getFolders("../ThirdParty/Listen"));
     for(auto it : folders)
     {
-        subject.push_back(Subject<dim>(order, it));
+        sujets2D.push_back(hoa::Subject<Hoa2d>(5, it));
+        sujets3D.push_back(hoa::Subject<Hoa3d>(3, it));
     }
-    subject[1].read();
-    subject[1].writeForPD();
-    
-    for(auto it : subject)
+    for(auto it : sujets2D)
     {
         it.read();
         it.writeForCPP();
     }
-    /*
-    //cout.setf(std::ios::scientific | std:: ios::showpoint);
-    cout.precision(numeric_limits<long double>::digits10);
-    cout << numeric_limits<sample>::digits << " "<< 1.999999000087543210123456l;
-    //double harmonics_2D[5 * 2 + 1];
-    cout << "end \n";
-    
-    typedef std::numeric_limits<long double > dbl;
-    long double d = 3.141592653589790001l;
-    cout.precision(dbl::digits10);
-    cout << "Pi: " << fixed << d << endl;
-     */
+    for(auto it : sujets3D)
+    {
+        it.read();
+        it.writeForCPP();
+    }
+
     return 0;
 }
