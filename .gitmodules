@@ -1,3 +1,6 @@
 [submodule "ThirdParty/HoaLibrary"]
 	path = ThirdParty/HoaLibrary
 	url = https://pierreguillot@github.com/CICM/HoaLibrary-Light.git
+[submodule "ThirdParty/LibSndFile"]
+	path = ThirdParty/LibSndFile
+	url = https://github.com/erikd/libsndfile.git

@@ -10,23 +10,26 @@
 #include <climits>
 using namespace hoa;
 using namespace std;
-typedef float sample;
 static const Dimension dim      = Hoa2d;
 static const ulong     order    = 5;
 
 int main(int argc, const char * argv[])
 {
     cout << "Current folder : " << System::getCurrentFolder() << "\n";
-    vector<Subject<dim, sample>> subject;
+    vector<Subject<dim>> subject;
     
     vector<System::Folder> folders(System::getFolders("../ThirdParty/Listen"));
     for(auto it : folders)
     {
-        subject.push_back(Subject<dim, sample>(order, it));
+        subject.push_back(Subject<dim>(order, it));
     }
+    subject[1].read();
+    subject[1].writeForPD();
+    
     for(auto it : subject)
     {
-        it.write("matrix.hpp");
+        it.read();
+        it.writeForCPP();
     }
     /*
     //cout.setf(std::ios::scientific | std:: ios::showpoint);
