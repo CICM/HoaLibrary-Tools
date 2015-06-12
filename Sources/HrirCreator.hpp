@@ -242,21 +242,53 @@ namespace hoa
                 file << "// Size of the matrics   : " + to_string(getMatricesSize()) + "\n\n";
                 
                 file << "namespace hoa\n{\n\n";
-                file.precision(numeric_limits<double>::digits10);
+                file.precision(numeric_limits<float>::digits10);
                 
                 file << "\n    static const float " + name + "_float_2d_left[] = {";
                 for(ulong i = 0; i < m_left.size() - 1; i++)
                 {
-                    file << m_left[i] << ", ";
+                    if(m_left[i] - (int)m_left[i] != 0.)
+                    {
+                        file << float(m_left[i]) << "f, ";
+                    }
+                    else
+                    {
+                        file << "0.f, ";
+                    }
+                    
                 }
-                file << m_left[m_left.size()-1] << "};\n";
+                if(m_right[m_left.size()-1] - (int)m_right[m_left.size()-1] != 0.)
+                {
+                    file << float(m_left[m_right.size()-1]) << "f};\n";
+                }
+                else
+                {
+                    file << "0.f};\n";
+                }
                 
                 file << "    static const float " + name + "_float_2d_right[] = {";
                 for(ulong i = 0; i < m_right.size() - 1; i++)
                 {
-                    file << m_right[i] << ", ";
+                    if(m_left[i] - (int)m_right[i] != 0.)
+                    {
+                        file << float(m_right[i]) << "f, ";
+                    }
+                    else
+                    {
+                        file << "0.f, ";
+                    }
                 }
-                file << m_right[m_right.size()-1] << "};\n";
+                if(m_right[m_right.size()-1] - (int)m_right[m_right.size()-1] != 0.)
+                {
+                    file << float(m_right[m_right.size()-1]) << "f};\n";
+                }
+                else
+                {
+                    file << "0.f};\n";
+                }
+                
+                
+                file.precision(numeric_limits<double>::digits10);
                 
                 file << "\n    static const double " + name + "_double_2d_left[] = {";
                 for(ulong i = 0; i < m_left.size() - 1; i++)
@@ -413,22 +445,52 @@ namespace hoa
                 file << "// Size of the matrics   : " + to_string(getMatricesSize()) + "\n\n";
                 
                 file << "namespace hoa\n{\n\n";
-                file.precision(numeric_limits<double>::digits10);
+                file.precision(numeric_limits<float>::digits10);
                 
                 file << "\n    static const float " + name + "_float_3d_left[] = {";
                 for(ulong i = 0; i < m_left.size() - 1; i++)
                 {
-                    file << m_left[i] << ", ";
+                    if(m_left[i] - (int)m_left[i] != 0.)
+                    {
+                        file << float(m_left[i]) << "f, ";
+                    }
+                    else
+                    {
+                        file << "0.f, ";
+                    }
+                    
                 }
-                file << m_left[m_left.size()-1] << "};\n";
+                if(m_right[m_left.size()-1] - (int)m_right[m_left.size()-1] != 0.)
+                {
+                    file << float(m_left[m_right.size()-1]) << "f};\n";
+                }
+                else
+                {
+                    file << "0.f};\n";
+                }
                 
                 file << "    static const float " + name + "_float_3d_right[] = {";
                 for(ulong i = 0; i < m_right.size() - 1; i++)
                 {
-                    file << m_right[i] << ", ";
+                    if(m_left[i] - (int)m_right[i] != 0.)
+                    {
+                        file << float(m_right[i]) << "f, ";
+                    }
+                    else
+                    {
+                        file << "0.f, ";
+                    }
                 }
-                file << m_right[m_right.size()-1] << "};\n";
+                if(m_right[m_right.size()-1] - (int)m_right[m_right.size()-1] != 0.)
+                {
+                    file << float(m_right[m_right.size()-1]) << "f};\n";
+                }
+                else
+                {
+                    file << "0.f};\n";
+                }
                 
+                file.precision(numeric_limits<double>::digits10);
                 file << "\n    static const double " + name + "_double_3d_left[] = {";
                 for(ulong i = 0; i < m_left.size() - 1; i++)
                 {
