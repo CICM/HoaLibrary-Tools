@@ -31,12 +31,12 @@ namespace hoa
             string::size_type pos = ntxt.find_first_of('.');
             if(pos != string::npos)
             {
-                ntxt.erase(ntxt.begin()+pos, ntxt.end());
+                ntxt.erase(ntxt.begin()+long(pos), ntxt.end());
             }
             pos = ntxt.find_last_of(sepator);
             if(pos != string::npos)
             {
-                ntxt.erase(ntxt.begin(), ntxt.begin()+min(pos + 1, ntxt.size()));
+                ntxt.erase(ntxt.begin(), ntxt.begin()+long(min(pos + 1, ntxt.size())));
             }
             return ntxt;
         }
@@ -47,7 +47,7 @@ namespace hoa
             string::size_type pos = ntxt.find_last_of('.');
             if(pos != string::npos)
             {
-                ntxt.erase(ntxt.begin(), ntxt.begin()+pos);
+                ntxt.erase(ntxt.begin(), ntxt.begin()+long(pos));
             }
             return ntxt;
         }

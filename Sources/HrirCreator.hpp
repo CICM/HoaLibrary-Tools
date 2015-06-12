@@ -35,14 +35,14 @@ namespace hoa
             {
                 if(isdigit(name[pos+2]))
                 {
-                    name.erase(name.begin(), name.begin()+pos+2);
+                    name.erase(name.begin(), name.begin()+long(pos)+2);
                     m_azimuth = double(stol(name)) / 360. * HOA_2PI;
                     pos = name.find("_P");
                     if(pos != string::npos && pos < name.size() - 2)
                     {
                         if(isdigit(name[pos+2]))
                         {
-                            name.erase(name.begin(), name.begin()+pos+2);
+                            name.erase(name.begin(), name.begin()+long(pos)+2);
                             m_elevation = double(stol(name)) / 360. * HOA_2PI;
                             m_valid = true;
                         }
@@ -60,7 +60,7 @@ namespace hoa
             {
                 try
                 {
-                    m_values.resize(file.channels() * file.frames());
+                    m_values.resize(ulong(file.channels() * file.frames()));
                 }
                 catch(exception& e)
                 {
@@ -68,7 +68,7 @@ namespace hoa
                     m_values.clear();
                     return;
                 }
-                sf_count_t count = file.read(m_values.data(), file.channels() * file.frames());
+                size_t count = (size_t)file.read(m_values.data(), sf_count_t(file.channels() * file.frames()));
                 if(count != m_values.size())
                 {
                     m_values.clear();
@@ -222,12 +222,12 @@ namespace hoa
             {
                 if(name[i] == '_')
                 {
-                    name.erase(name.begin() + i);
+                    name.erase(name.begin() + long(i));
                     size--;
                 }
                 else
                 {
-                    name[i] = tolower(name[i]);
+                    name[i] = (char)tolower(name[i]);
                 }
             }
             ofstream file("../Results/Hrir"+ name + "2D.hpp");
@@ -425,12 +425,12 @@ namespace hoa
             {
                 if(name[i] == '_')
                 {
-                    name.erase(name.begin() + i);
+                    name.erase(name.begin() + long(i));
                     size--;
                 }
                 else
                 {
-                    name[i] = tolower(name[i]);
+                    name[i] = (char)tolower(name[i]);
                 }
             }
             ofstream file("../Results/Hrir"+ name + "3D.hpp");
