@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8F4DC76A1B258D270050A443 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F4DC7691B258D270050A443 /* main.cpp */; };
-		8F81B53C1B2A9C7200CC9035 /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F81B53B1B2A9C7200CC9035 /* libsndfile.a */; };
+		CE1CEA97222768D900A68CEC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE1CEA96222768D900A68CEC /* main.cpp */; };
+		CE1CEA9A222770EF00A68CEC /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1CEA99222770EF00A68CEC /* libsndfile.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +25,9 @@
 
 /* Begin PBXFileReference section */
 		8F4DC75F1B258CFE0050A443 /* HrirMatrixCreator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HrirMatrixCreator; sourceTree = BUILT_PRODUCTS_DIR; };
-		8F4DC7691B258D270050A443 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
-		8F4DC7711B258E540050A443 /* HrirCreator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HrirCreator.hpp; path = ../Sources/HrirCreator.hpp; sourceTree = "<group>"; };
-		8F4DC7721B258E540050A443 /* System.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = System.hpp; path = ../Sources/System.hpp; sourceTree = "<group>"; };
-		8F81B53B1B2A9C7200CC9035 /* libsndfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsndfile.a; path = ../ThirdParty/LibSndFile/src/.libs/libsndfile.a; sourceTree = "<group>"; };
+		CE1CEA93222768A600A68CEC /* Sources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sources; path = ../Sources; sourceTree = "<group>"; };
+		CE1CEA96222768D900A68CEC /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		CE1CEA99222770EF00A68CEC /* libsndfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsndfile.a; path = ../../../../../../../../usr/local/lib/libsndfile.a; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,7 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F81B53C1B2A9C7200CC9035 /* libsndfile.a in Frameworks */,
+				CE1CEA9A222770EF00A68CEC /* libsndfile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,9 +45,10 @@
 		8F4DC7561B258CFE0050A443 = {
 			isa = PBXGroup;
 			children = (
-				8F81B53B1B2A9C7200CC9035 /* libsndfile.a */,
-				8F4DC7611B258CFE0050A443 /* HrirMatrixCreator */,
+				CE1CEA93222768A600A68CEC /* Sources */,
+				CE1CEA96222768D900A68CEC /* main.cpp */,
 				8F4DC7601B258CFE0050A443 /* Products */,
+				CE1CEA98222770EF00A68CEC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,23 +60,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8F4DC7611B258CFE0050A443 /* HrirMatrixCreator */ = {
+		CE1CEA98222770EF00A68CEC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8F4DC7691B258D270050A443 /* main.cpp */,
-				8F4DC7701B258E540050A443 /* Sources */,
+				CE1CEA99222770EF00A68CEC /* libsndfile.a */,
 			);
-			path = HrirMatrixCreator;
-			sourceTree = "<group>";
-		};
-		8F4DC7701B258E540050A443 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				8F4DC7711B258E540050A443 /* HrirCreator.hpp */,
-				8F4DC7721B258E540050A443 /* System.hpp */,
-			);
-			name = Sources;
-			path = ../../Sources;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -105,8 +94,8 @@
 		8F4DC7571B258CFE0050A443 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
-				ORGANIZATIONNAME = PierreGuillot;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = cicm;
 				TargetAttributes = {
 					8F4DC75E1B258CFE0050A443 = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -135,7 +124,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F4DC76A1B258D270050A443 /* main.cpp in Sources */,
+				CE1CEA97222768D900A68CEC /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,23 +140,32 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -197,10 +195,12 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = "$(inherited) /usr/local/include";
 			};
 			name = Debug;
 		};
@@ -213,17 +213,25 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
@@ -253,19 +261,19 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = "$(inherited) /usr/local/include";
 			};
 			name = Release;
 		};
 		8F4DC7671B258CFE0050A443 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/LibSndFile/src/.libs",
-				);
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/../bin/";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -273,11 +281,9 @@
 		8F4DC7681B258CFE0050A443 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/../bin/";
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/Pierre/GitHub/HoaLibrary-Tools/ThirdParty/LibSndFile/src/.libs",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
