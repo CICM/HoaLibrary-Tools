@@ -7,33 +7,24 @@
 //
 
 #include "../Sources/HrirCreator.hpp"
-#include <climits>
-#include <vector>
 
 using namespace hoa;
-using namespace std;
+
+template<Dimension Dim>
+void writeSubject(hoa::Subject<Dim>&& subject)
+{
+    subject.read();
+    subject.writeForCPP();
+}
 
 int main(int argc, const char * argv[])
 {
     cout << "Current folder : " << System::getCurrentFolder() << "\n";
-    vector< hoa::Subject< Hoa2d > > sujets2D;
-    vector< hoa::Subject< Hoa3d > > sujets3D;
     
-    vector<System::Folder> folders(System::getFolders("../ThirdParty/Listen"));
-    for(auto it : folders)
+    for(auto folder : System::getFolders("../ThirdParty/Listen"))
     {
-        sujets2D.push_back(hoa::Subject<Hoa2d>(5, it));
-        sujets3D.push_back(hoa::Subject<Hoa3d>(3, it));
-    }
-    for(auto it : sujets2D)
-    {
-        it.read();
-        it.writeForCPP();
-    }
-    for(auto it : sujets3D)
-    {
-        it.read();
-        it.writeForCPP();
+        writeSubject<Hoa2d>({5, folder});
+        writeSubject<Hoa3d>({3, folder});
     }
 
     return 0;
