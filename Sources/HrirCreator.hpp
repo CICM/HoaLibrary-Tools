@@ -4,8 +4,7 @@
 // WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 */
 
-#ifndef DEF_HOA_HRIR_CREATOR_LIGHT
-#define DEF_HOA_HRIR_CREATOR_LIGHT
+#pragma once
 
 #include "System.hpp"
 #include "../ThirdParty/LibSndFile/src/sndfile.hh"
@@ -14,9 +13,7 @@ using namespace std;
 
 namespace hoa
 {
-    //! The response class owns the informations of an impulse response.
-    /** The response class owns the informations of an impulse response.
-     */
+    //! @brief The response class owns the informations of an impulse response.
     class Response : public System::File
     {
     private:
@@ -439,7 +436,7 @@ namespace hoa
                 file << "/*\n// Copyright (c) 2012-2015 Eliott Paris, Julien Colafrancesco & Pierre Guillot, CICM, Universite Paris 8.\n// For information on usage and redistribution, and for a DISCLAIMER OF ALL\n// WARRANTIES, see the file, \"LICENSE.txt,\" in this distribution.\n*/\n\n";
                 file << "#ifndef DEF_HOA_HRIR_" + m_folder.getName() + "_3D_LIGHT\n";
                 file << "#define DEF_HOA_HRIR_" + m_folder.getName() + "_3D_LIGHT\n\n";
-                file << "// Order of Decompistion : " + to_string(getDecompositionOrder()) + "\n";
+                file << "// Order of Decomposition : " + to_string(getDecompositionOrder()) + "\n";
                 file << "// Number of Harmonics   : " + to_string(getNumberOfHarmonics()) + "\n";
                 file << "// Size of the Responses : " + to_string(getResponsesSize()) + "\n";
                 file << "// Size of the matrics   : " + to_string(getMatricesSize()) + "\n\n";
@@ -517,5 +514,3 @@ namespace hoa
         }
     };
 }
-
-#endif

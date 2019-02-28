@@ -4,8 +4,7 @@
 // WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 */
 
-#ifndef DEF_HOA_SYSTEM_LIGHT
-#define DEF_HOA_SYSTEM_LIGHT
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -21,9 +20,9 @@ namespace hoa
     {
     private:
 #ifdef _WIN32
-        static const char sepator = '\\';
+        static const char separator = '\\';
 #else
-        static const char sepator = '/';
+        static const char separator = '/';
 #endif
         static inline string formatName(const string& name) noexcept
         {
@@ -33,7 +32,7 @@ namespace hoa
             {
                 ntxt.erase(ntxt.begin()+long(pos), ntxt.end());
             }
-            pos = ntxt.find_last_of(sepator);
+            pos = ntxt.find_last_of(separator);
             if(pos != string::npos)
             {
                 ntxt.erase(ntxt.begin(), ntxt.begin()+long(min(pos + 1, ntxt.size())));
@@ -55,9 +54,9 @@ namespace hoa
         static inline string formatPath(const string& path) noexcept
         {
             string ntxt = path;
-            if(!path.empty() && path[path.size()-1] != sepator)
+            if(!path.empty() && path[path.size()-1] != separator)
             {
-                ntxt += sepator;
+                ntxt += separator;
             }
             return ntxt;
         }
@@ -184,5 +183,3 @@ namespace hoa
     }
                 
 }
-
-#endif
