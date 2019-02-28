@@ -32,6 +32,6 @@ xcshareddata/
 *.dylib
 *.dll
 
-
-
-
+# ingnore build directory
+/build
+/bin
