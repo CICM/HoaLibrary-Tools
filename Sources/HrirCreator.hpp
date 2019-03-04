@@ -30,25 +30,24 @@ namespace hoa
         {
             std::string name = getName();
             std::string::size_type pos = name.find("_T");
-            if(pos != string::npos && pos < name.size() - 2)
+            
+            if(pos != std::string::npos && pos < name.size() - 2)
             {
                 if(std::isdigit(name[pos+2]))
                 {
                     name.erase(name.begin(), name.begin()+long(pos)+2);
-                    m_azimuth = double(stol(name)) / 360. * HOA_2PI;
+                    m_azimuth = stod(name) / 360. * HOA_2PI;
                     pos = name.find("_P");
                     if(pos != std::string::npos && pos < name.size() - 2)
                     {
                         if(std::isdigit(name[pos+2]))
                         {
                             name.erase(name.begin(), name.begin()+long(pos)+2);
-                            m_elevation = double(stol(name)) / 360. * HOA_2PI;
+                            m_elevation = stod(name) / 360. * HOA_2PI;
                             m_valid = true;
                         }
-                        
                     }
                 }
-                
             }
         }
         
@@ -59,11 +58,11 @@ namespace hoa
             {
                 try
                 {
-                    m_values.resize(ulong(file.channels() * file.frames()));
+                    m_values.resize(size_t(file.channels() * file.frames()));
                 }
-                catch(exception& e)
+                catch(std::exception& e)
                 {
-                    cout << e.what();
+                    std::cout << e.what();
                     m_values.clear();
                     return;
                 }
@@ -86,19 +85,19 @@ namespace hoa
         inline double getRadius() const noexcept {return m_radius;}
         inline double getAzimuth() const noexcept {return m_azimuth;}
         inline double getElevation() const noexcept {return m_elevation;}
-        inline ulong getNumberOfSamplesPerChannel() const noexcept {return m_values.size() / 2;}
-        inline double getSample(ulong channel, ulong index) const noexcept {
+        inline size_t getNumberOfSamplesPerChannel() const noexcept {return m_values.size() / 2;}
+        inline double getSample(size_t channel, size_t index) const noexcept {
             return (channel < 2 && index < getNumberOfSamplesPerChannel()) ?  m_values[index * 2 + channel] : 0;}
         bool isValid() const override {return m_valid;}
         
     private:
         
-        double          m_radius = 1.;
-        double          m_azimuth = 0.;
-        double          m_elevation = 0.;
-        vector<double>  m_values {};
-        ulong           m_size = 0;
-        bool            m_valid = false;
+        std::vector<double> m_values {};
+        double              m_radius = 1.;
+        double              m_azimuth = 0.;
+        double              m_elevation = 0.;
+        size_t              m_size = 0;
+        bool                m_valid = false;
     };
     
     static char const* const get_cpp_file_header_text()
@@ -132,8 +131,10 @@ namespace hoa
     {
     public:
         
-        Subject(const ulong order, const System::Folder& folder)
-        : Processor<Hoa2d, double>::Harmonics(order)
+        using processor_t = Processor<Hoa2d, double>::Harmonics;
+        
+        Subject(const size_t order, const System::Folder& folder)
+        : processor_t(order)
         , m_folder(folder)
         {}
         
@@ -144,27 +145,27 @@ namespace hoa
             return m_folder.getName();
         }
         
-        ulong getNumberOfResponses() const noexcept
+        size_t getNumberOfResponses() const noexcept
         {
             return m_responses.size();
         }
         
-        ulong getResponsesSize() const noexcept
+        size_t getResponsesSize() const noexcept
         {
             return m_size;
         }
         
-        ulong getDecompositionOrder() const noexcept
+        size_t getDecompositionOrder() const noexcept
         {
-            return Processor<Hoa2d, double>::Harmonics::getDecompositionOrder();
+            return processor_t::getDecompositionOrder();
         }
         
-        ulong getNumberOfHarmonics() const noexcept
+        size_t getNumberOfHarmonics() const noexcept
         {
-            return Processor<Hoa2d, double>::Harmonics::getNumberOfHarmonics();
+            return processor_t::getNumberOfHarmonics();
         }
         
-        inline ulong getMatricesSize() const noexcept
+        inline size_t getMatricesSize() const noexcept
         {
             return getResponsesSize() * getNumberOfHarmonics();
         }
@@ -178,28 +179,30 @@ namespace hoa
                 {
                     m_responses.push_back(temp);
                     m_responses[m_responses.size()-1].read();
-                    if(m_size < m_responses[m_responses.size()-1].getNumberOfSamplesPerChannel())
+                    const auto size = m_responses[m_responses.size()-1].getNumberOfSamplesPerChannel();
+                    if(m_size < size)
                     {
-                        m_size = m_responses[m_responses.size()-1].getNumberOfSamplesPerChannel();
+                        m_size = size;
                     }
                 }
             }
             
-            m_left.resize(getResponsesSize() * getNumberOfHarmonics());
+            m_left.resize(getMatricesSize());
             fill(m_left.begin(), m_left.end(), 0.);
-            m_right.resize(getResponsesSize() * getNumberOfHarmonics());
+            m_right.resize(getMatricesSize());
             fill(m_right.begin(), m_right.end(), 0.);
             
-            auto harmonics = std::vector<double>(getNumberOfHarmonics(), 0.);
+            std::vector<double> harmonics (getNumberOfHarmonics(), 0.);
             const auto order = getDecompositionOrder();
             Encoder<Hoa2d, double>::Basic encoder(order);
             
             for(auto& response : m_responses)
             {
                 encoder.setAzimuth(response.getAzimuth());
-                for(ulong j = 0; j < getResponsesSize(); j++)
+                
+                for(size_t j = 0; j < getResponsesSize(); j++)
                 {
-                    const double left  = response.getSample(0, j) / double(order + 1.);
+                    const double left = response.getSample(0, j) / double(order + 1.);
                     encoder.process(&left, harmonics.data());
                     harmonics[0] *= 0.5;
                     Signal<double>::add(harmonics.size(), harmonics.data(),
@@ -216,7 +219,7 @@ namespace hoa
 
         void writeForCPP()
         {
-            string name = getName();
+            std::string name = getName();
             size_t size = name.size();
             for(size_t i = 1; i < size; i++)
             {
@@ -231,7 +234,7 @@ namespace hoa
                 }
             }
             
-            const auto filename = "../Results/Hrir" + name + "2D.hpp";
+            const auto filename = "../Results/Hoa_Hrir" + name + "2D.hpp";
             std::ofstream file(filename);
             if(file.is_open())
             {
@@ -239,74 +242,43 @@ namespace hoa
                 
                 file << "#pragma once\n\n";
                 
-                file << "// Order of Decomposition : " + to_string(getDecompositionOrder()) + "\n";
-                file << "// Number of Harmonics    : " + to_string(getNumberOfHarmonics()) + "\n";
-                file << "// Size of the Responses  : " + to_string(getResponsesSize()) + "\n";
-                file << "// Size of the matrices   : " + to_string(getMatricesSize()) + "\n\n";
+                file << "// Order of Decomposition : " + std::to_string(getDecompositionOrder()) + "\n";
+                file << "// Number of Harmonics    : " + std::to_string(getNumberOfHarmonics()) + "\n";
+                file << "// Size of the Responses  : " + std::to_string(getResponsesSize()) + "\n";
+                file << "// Size of the matrices   : " + std::to_string(getMatricesSize()) + "\n\n";
                 
                 file << "namespace hoa\n{\n";
-                file.precision(numeric_limits<float>::digits10);
+                file.precision(std::numeric_limits<float>::digits10);
                 
                 file << "    static const float " + name + "_float_2d_left[] = {";
-                for(ulong i = 0; i < m_left.size() - 1; i++)
-                {
-                    if(m_left[i] - (int)m_left[i] != 0.)
-                    {
-                        file << float(m_left[i]) << "f, ";
-                    }
-                    else
-                    {
-                        file << "0.f, ";
-                    }
-                    
-                }
                 
-                if(m_right[m_left.size()-1] - (int)m_right[m_left.size()-1] != 0.)
+                for(size_t i = 0; i < m_left.size() - 1; i++)
                 {
-                    file << float(m_left[m_right.size()-1]) << "f};\n";
+                    file << static_cast<float>(m_left[i]) << "f, ";
                 }
-                else
-                {
-                    file << "0.f};\n";
-                }
+                file << static_cast<float>(m_left[m_right.size()-1]) << "f};\n";
                 
                 file << '\n';
                 
                 file << "    static const float " + name + "_float_2d_right[] = {";
-                for(ulong i = 0; i < m_right.size() - 1; i++)
+                for(size_t i = 0; i < m_right.size() - 1; i++)
                 {
-                    if(m_left[i] - (int)m_right[i] != 0.)
-                    {
-                        file << float(m_right[i]) << "f, ";
-                    }
-                    else
-                    {
-                        file << "0.f, ";
-                    }
+                    file << static_cast<float>(m_right[i]) << "f, ";
                 }
+                file << static_cast<float>(m_right[m_right.size()-1]) << "f};\n";
                 
-                if(m_right[m_right.size()-1] - (int)m_right[m_right.size()-1] != 0.)
-                {
-                    file << float(m_right[m_right.size()-1]) << "f};\n";
-                }
-                else
-                {
-                    file << "0.f};\n";
-                }
-                
-                
-                file.precision(numeric_limits<double>::digits10);
+                file.precision(std::numeric_limits<double>::digits10);
                 
                 file << '\n';
-                file << "    static const double " + name + "_double_2d_left[] = {";
-                for(ulong i = 0; i < m_left.size() - 1; i++)
+                file << "\n    static const double " + name + "_double_2d_left[] = {";
+                for(size_t i = 0; i < m_left.size() - 1; i++)
                 {
                     file << m_left[i] << ", ";
                 }
                 file << m_left[m_left.size()-1] << "};\n";
                 
                 file << "    static const double " + name + "_double_2d_right[] = {";
-                for(ulong i = 0; i < m_right.size() - 1; i++)
+                for(size_t i = 0; i < m_right.size() - 1; i++)
                 {
                     file << m_right[i] << ", ";
                 }
@@ -328,7 +300,7 @@ namespace hoa
         
         const System::Folder    m_folder;
         std::vector<Response>   m_responses = {};
-        ulong                   m_size = 0;
+        size_t                  m_size = 0;
         std::vector<double>     m_left = {};
         std::vector<double>     m_right = {};
     };
@@ -344,36 +316,38 @@ namespace hoa
     {
     public:
         
-        Subject(const ulong order, System::Folder const& folder)
-        : Processor<Hoa3d, double>::Harmonics(order)
+        using processor_t = Processor<Hoa3d, double>::Harmonics;
+        
+        Subject(const size_t order, System::Folder const& folder)
+        : processor_t(order)
         , m_folder(folder)
         {}
         
         ~Subject() = default;
         
-        inline std::string getName() const {return m_folder.getName();};
+        std::string const& getName() const {return m_folder.getName();};
         
-        inline ulong getNumberOfResponses() const noexcept
+        inline size_t getNumberOfResponses() const noexcept
         {
             return m_responses.size();
         }
         
-        inline ulong getResponsesSize() const noexcept
+        inline size_t getResponsesSize() const noexcept
         {
             return m_size;
         }
         
-        inline ulong getDecompositionOrder() const noexcept
+        inline size_t getDecompositionOrder() const noexcept
         {
-            return Processor<Hoa3d, double>::Harmonics::getDecompositionOrder();
+            return processor_t::getDecompositionOrder();
         }
         
-        inline ulong getNumberOfHarmonics() const noexcept
+        inline size_t getNumberOfHarmonics() const noexcept
         {
-            return Processor<Hoa3d, double>::Harmonics::getNumberOfHarmonics();
+            return processor_t::getNumberOfHarmonics();
         }
         
-        inline ulong getMatricesSize() const noexcept
+        inline size_t getMatricesSize() const noexcept
         {
             return getResponsesSize() * getNumberOfHarmonics();
         }
@@ -396,29 +370,26 @@ namespace hoa
                 }
             }
             
-            m_left.resize(getResponsesSize() * getNumberOfHarmonics());
-            fill(m_left.begin(), m_left.end(), double(0));
-            m_right.resize(getResponsesSize() * getNumberOfHarmonics());
-            fill(m_right.begin(), m_right.end(), double(0));
+            m_left.resize(getMatricesSize());
+            fill(m_left.begin(), m_left.end(), 0.);
+            m_right.resize(getMatricesSize());
+            fill(m_right.begin(), m_right.end(), 0.);
             
             std::vector<double> harmonics (getNumberOfHarmonics(), 0.);
             
             Encoder<Hoa3d, double>::Basic encoder(getDecompositionOrder());
             for(auto& response : m_responses)
             {
-                const auto azimuth = response.getAzimuth();
-                encoder.setAzimuth(azimuth);
-                const auto elevation = response.getElevation();
-                encoder.setElevation(elevation);
-                for(ulong j = 0; j < getResponsesSize(); j++)
+                encoder.setAzimuth(response.getAzimuth());
+                encoder.setElevation(response.getElevation());
+                for(size_t j = 0; j < getResponsesSize(); j++)
                 {
                     const double left  = response.getSample(0, j) / double(getNumberOfResponses());
-                    const double right = response.getSample(1, j) / double(getNumberOfResponses());
                     encoder.process(&left, harmonics.data());
                     
-                    for(ulong k = 0; k < getNumberOfHarmonics(); k++)
+                    for(size_t k = 0; k < harmonics.size(); k++)
                     {
-                        const ulong l = encoder.getHarmonicDegree(k);
+                        const size_t l = encoder.getHarmonicDegree(k);
                         if(encoder.getHarmonicOrder(k) == 0)
                         {
                             harmonics[k] *= (2. * l + 1.);
@@ -428,12 +399,16 @@ namespace hoa
                             harmonics[k] *= double(2. * l + 1.) * 4. * HOA_PI;
                         }
                     }
-                    Signal<double>::add(getNumberOfHarmonics(), harmonics.data(), m_left.data()+j*getNumberOfHarmonics());
+                    
+                    Signal<double>::add(harmonics.size(), harmonics.data(),
+                                        m_left.data() + j * harmonics.size());
+                    
+                    const double right = response.getSample(1, j) / double(getNumberOfResponses());
                     encoder.process(&right, harmonics.data());
                     
-                    for(ulong k = 0; k < getNumberOfHarmonics(); k++)
+                    for(size_t k = 0; k < harmonics.size(); k++)
                     {
-                        const ulong l = encoder.getHarmonicDegree(k);
+                        const size_t l = encoder.getHarmonicDegree(k);
                         if(encoder.getHarmonicOrder(k) == 0)
                         {
                             harmonics[k] *= (2. * l + 1.);
@@ -444,7 +419,8 @@ namespace hoa
                         }
                     }
                     
-                    Signal<double>::add(getNumberOfHarmonics(), harmonics.data(), m_right.data()+j*getNumberOfHarmonics());
+                    Signal<double>::add(harmonics.size(), harmonics.data(),
+                                        m_right.data() + j * harmonics.size());
                 }
             }
         }
@@ -466,7 +442,7 @@ namespace hoa
                 }
             }
             
-            const auto filename = "../Results/Hrir"+ name + "3D.hpp";
+            const auto filename = "../Results/Hoa_Hrir" + name + "3D.hpp";
             std::ofstream file(filename);
             if(file.is_open())
             {
@@ -483,66 +459,42 @@ namespace hoa
                 file.precision(std::numeric_limits<float>::digits10);
                 
                 file << "    static const float " + name + "_float_3d_left[] = {";
-                for(ulong i = 0; i < m_left.size() - 1; i++)
+                
+                for(size_t i = 0; i < m_left.size() - 1; i++)
                 {
-                    if(m_left[i] - (int)m_left[i] != 0.)
-                    {
-                        file << static_cast<float>(m_left[i]) << "f, ";
-                    }
-                    else
-                    {
-                        file << "0.f, ";
-                    }
-                    
+                    file << static_cast<float>(m_left[i]) << "f, ";
                 }
-                if(m_right[m_left.size()-1] - (int)m_right[m_left.size()-1] != 0.)
-                {
-                    file << static_cast<float>(m_left[m_right.size()-1]) << "f};\n";
-                }
-                else
-                {
-                    file << "0.f};\n";
-                }
+                file << static_cast<float>(m_left[m_left.size()-1]) << "f};\n";
+                
+                file << '\n';
                 
                 file << "    static const float " + name + "_float_3d_right[] = {";
-                for(ulong i = 0; i < m_right.size() - 1; i++)
+                for(size_t i = 0; i < m_right.size() - 1; i++)
                 {
-                    if(m_left[i] - (int)m_right[i] != 0.)
-                    {
-                        file << float(m_right[i]) << "f, ";
-                    }
-                    else
-                    {
-                        file << "0.f, ";
-                    }
+                    file << static_cast<float>(m_right[i]) << "f, ";
                 }
-                if(m_right[m_right.size()-1] - (int)m_right[m_right.size()-1] != 0.)
-                {
-                    file << float(m_right[m_right.size()-1]) << "f};\n";
-                }
-                else
-                {
-                    file << "0.f};\n";
-                }
+                file << static_cast<float>(m_right[m_right.size()-1]) << "f};\n";
                 
-                file.precision(numeric_limits<double>::digits10);
+                file.precision(std::numeric_limits<double>::digits10);
+                
+                file << '\n';
                 file << "\n    static const double " + name + "_double_3d_left[] = {";
-                for(ulong i = 0; i < m_left.size() - 1; i++)
+                for(size_t i = 0; i < m_left.size() - 1; i++)
                 {
                     file << m_left[i] << ", ";
                 }
                 file << m_left[m_left.size()-1] << "};\n";
                 
                 file << "    static const double " + name + "_double_3d_right[] = {";
-                for(ulong i = 0; i < m_right.size() - 1; i++)
+                for(size_t i = 0; i < m_right.size() - 1; i++)
                 {
                     file << m_right[i] << ", ";
                 }
                 file << m_right[m_right.size()-1] << "};\n";
                 
                 file <<"\n}\n";
-                file.close();
                 
+                file.close();
                 std::cout << name << " 3d response written" << "\n";
             }
             else
@@ -555,7 +507,7 @@ namespace hoa
         
         const System::Folder    m_folder;
         std::vector<Response>   m_responses = {};
-        ulong                   m_size = 0;
+        size_t                  m_size = 0;
         std::vector<double>     m_left = {};
         std::vector<double>     m_right = {};
     };

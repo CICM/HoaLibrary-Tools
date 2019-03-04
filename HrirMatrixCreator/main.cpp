@@ -20,7 +20,7 @@ void writeSubject(hoa::Subject<Dim>&& subject)
 
 int main(int argc, const char * argv[])
 {
-    cout << "Current folder : " << System::getCurrentFolder() << "\n";
+    std::cout << "Current folder : " << System::getCurrentFolder() << "\n";
     
     for(auto folder : System::getFolders("../ThirdParty/Listen"))
     {
