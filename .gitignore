@@ -1,8 +1,3 @@
-# Listen Data Base
-ThirdParty/Listen/*
-Results/*
-!ThirdParty/Listen/readme.txt
-
 # Mac OsX
 xcuserdata/
 xcshareddata/
@@ -32,6 +27,14 @@ xcshareddata/
 *.dylib
 *.dll
 
+# Listen Data Base
+ThirdParty/Listen/*
+!ThirdParty/Listen/readme.txt
 
+# ingnore build directory
+/build
+/bin
 
-
+# ignore program results
+Results/*
+!Results/readme.txt
