@@ -145,8 +145,8 @@ namespace hoa
             Right
         };
         
-        using processor_t = typename Processor<Dim, double>::Harmonics;
-        using encoder_t = typename Encoder<Dim, double>::Basic;
+        using processor_t = ProcessorHarmonics<Dim, double>;
+        using encoder_t = Encoder<Dim, double>;
         
         Subject(const size_t order, System::Folder const& folder)
         : m_processor(order)
@@ -386,6 +386,14 @@ namespace hoa
         const auto order = getDecompositionOrder();
         encoder_t encoder(order);
         
+        auto normalize = [&encoder, &harmonics] () {
+            for(size_t k = 0; k < harmonics.size(); k++)
+            {
+                const size_t l = encoder.getHarmonicDegree(k);
+                harmonics[k] *= double(2. * l + 1.);
+            }
+        };
+        
         for(auto& response : m_responses)
         {
             encoder.setAzimuth(response.getAzimuth());
@@ -394,39 +402,13 @@ namespace hoa
             {
                 const double left = response.getSample(0, j) / double(getNumberOfResponses());
                 encoder.process(&left, harmonics.data());
-                
-                for(size_t k = 0; k < harmonics.size(); k++)
-                {
-                    const size_t l = encoder.getHarmonicDegree(k);
-                    if(encoder.getHarmonicOrder(k) == 0)
-                    {
-                        harmonics[k] *= (2. * l + 1.);
-                    }
-                    else
-                    {
-                        harmonics[k] *= double(2. * l + 1.) * 4. * HOA_PI;
-                    }
-                }
-                
+                normalize();
                 Signal<double>::add(harmonics.size(), harmonics.data(),
                                     m_left.data() + j * harmonics.size());
                 
                 const double right = response.getSample(1, j) / double(getNumberOfResponses());
                 encoder.process(&right, harmonics.data());
-                
-                for(size_t k = 0; k < harmonics.size(); k++)
-                {
-                    const size_t l = encoder.getHarmonicDegree(k);
-                    if(encoder.getHarmonicOrder(k) == 0)
-                    {
-                        harmonics[k] *= (2. * l + 1.);
-                    }
-                    else
-                    {
-                        harmonics[k] *= double(2. * l + 1.) * 4. * HOA_PI;
-                    }
-                }
-                
+                normalize();
                 Signal<double>::add(harmonics.size(), harmonics.data(),
                                     m_right.data() + j * harmonics.size());
             }
