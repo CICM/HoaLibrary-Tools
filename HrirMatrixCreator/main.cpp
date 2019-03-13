@@ -19,15 +19,89 @@ void writeSubject(Subject<Dim>&& subject)
     subject.writeForCPP();
 }
 
+void writeCppFileForConfig(Config& config);
+void writeCppFileForConfig(Config& config)
+{
+    switch(config.dimension)
+    {
+        case hoa::Hoa2d : { writeSubject<Hoa2d>({config}); break;}
+        case hoa::Hoa3d : { writeSubject<Hoa3d>({config}); break;}
+    }
+}
+
 int main(int argc, const char * argv[])
 {
     std::cout << "Current folder : " << System::getCurrentFolder() << "\n";
     
-    for(auto folder : System::getFolders("../ThirdParty/Listen"))
+    using namespace std::string_literals;
+    
+    const auto database_path = "../ThirdParty/HrirDatabase"s;
+    const auto Sadie_database_path = database_path + "/Sadie";
+    const auto Listen_database_path = database_path + "/Listen";
+    
+    std::vector<Config> configs;
+    
+    Config main_config {};
+    
+    main_config.output_directory = "../Results/";
+    
+    // Listen 1002C subject config
     {
-        std::cout << "reading " << folder.getName() << " folder" << '\n';
-        writeSubject<Hoa2d>({5, folder});
-        writeSubject<Hoa3d>({3, folder});
+        Config listen_1002C = main_config;
+        
+        listen_1002C.database_type = HrirDatabase::Listen;
+        listen_1002C.classname = "Listen_1002C";
+        listen_1002C.wave_folder = {Listen_database_path, "IRC_1002_C"};
+        
+        listen_1002C.notes = "link: ftp://ftp.ircam.fr/pub/IRCAM/equipes/salles/listen/archive/SUBJECTS/IRC_1002.zip";
+        
+        // 2D config
+        {
+            Config config = listen_1002C;
+            config.dimension = Dimension::Hoa2d;
+            config.order = 5;
+            configs.emplace_back(std::move(config));
+        }
+        
+        // 3D config
+        {
+            Config config = listen_1002C;
+            config.dimension = Dimension::Hoa3d;
+            config.order = 3;
+            configs.emplace_back(std::move(config));
+        }
+    }
+    
+    // Sadie D2 subject config
+    {
+        Config sadie_d2 = main_config;
+        
+        sadie_d2.database_type = HrirDatabase::Sadie;
+        sadie_d2.classname = "Sadie_D2";
+        sadie_d2.wave_folder = {Sadie_database_path + "/D2_HRIR_WAV", "44K_16bit"};
+        
+        sadie_d2.notes = "link: https://www.york.ac.uk/sadie-project/Resources/SADIEIIDatabase/D2/D2_HRIR_WAV.zip";
+        
+        // 2D config
+        {
+            Config config = sadie_d2;
+            config.dimension = Dimension::Hoa2d;
+            config.order = 5;
+            configs.emplace_back(std::move(config));
+        }
+        
+        // 3D config
+        {
+            Config config = sadie_d2;
+            config.dimension = Dimension::Hoa3d;
+            config.order = 3;
+            configs.emplace_back(std::move(config));
+        }
+    }
+    
+    for(auto& config : configs)
+    {
+        writeCppFileForConfig(config);
     }
 
     return 0;

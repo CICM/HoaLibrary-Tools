@@ -27,11 +27,14 @@ xcshareddata/
 *.dylib
 *.dll
 
-# Listen Data Base
-ThirdParty/Listen/*
-!ThirdParty/Listen/readme.txt
+# Hrir Database
+ThirdParty/HrirDatabase/Listen/*
+!ThirdParty/HrirDatabase/Listen/readme.txt
 
-# ingnore build directory
+ThirdParty/HrirDatabase/Sadie/*
+!ThirdParty/HrirDatabase/Sadie/readme.txt
+
+# ignore build directory
 /build
 /bin
 
