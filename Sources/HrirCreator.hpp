@@ -15,7 +15,7 @@
 
 #include <type_traits>
 
-namespace hoa
+namespace hoa::hrir_matrix_creator
 {
     // ================================================================================ //
     // Response

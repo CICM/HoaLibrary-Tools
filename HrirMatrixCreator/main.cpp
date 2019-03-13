@@ -10,9 +10,10 @@
 #include "../Sources/HrirCreator.hpp"
 
 using namespace hoa;
+using namespace hrir_matrix_creator;
 
 template<Dimension Dim>
-void writeSubject(hoa::Subject<Dim>&& subject)
+void writeSubject(Subject<Dim>&& subject)
 {
     subject.read();
     subject.writeForCPP();
