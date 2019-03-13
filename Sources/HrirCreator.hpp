@@ -333,23 +333,26 @@ namespace hoa::hrir_matrix_creator
         const auto order = getDecompositionOrder();
         encoder_t encoder(order);
         
+        auto processSample = [&] (double input_sample, double* output_buffer) {
+            
+            encoder.process(&input_sample, harmonics.data());
+            harmonics[0] *= 0.5;
+            Signal<double>::add(harmonics.size(), harmonics.data(), output_buffer);
+        };
+        
         for(auto& response : m_responses)
         {
             encoder.setAzimuth(response.getAzimuth());
             
             for(size_t j = 0; j < getResponsesSize(); j++)
             {
+                const auto index = j * harmonics.size();
+                
                 const double left = response.getSample(0, j) / double(order + 1.);
-                encoder.process(&left, harmonics.data());
-                harmonics[0] *= 0.5;
-                Signal<double>::add(harmonics.size(), harmonics.data(),
-                                    m_left.data() + j * harmonics.size());
+                processSample(left, m_left.data() + index);
                 
                 const double right = response.getSample(1, j) / double(order + 1.);
-                encoder.process(&right, harmonics.data());
-                harmonics[0] *= 0.5;
-                Signal<double>::add(harmonics.size(), harmonics.data(),
-                                    m_right.data() + j * harmonics.size());
+                processSample(right, m_right.data() + index);
             }
         }
     }
@@ -386,31 +389,35 @@ namespace hoa::hrir_matrix_creator
         const auto order = getDecompositionOrder();
         encoder_t encoder(order);
         
-        auto normalize = [&encoder, &harmonics] () {
+        auto processSample = [&] (double input_sample, double* output_buffer) {
+            
+            encoder.process(&input_sample, harmonics.data());
+            
             for(size_t k = 0; k < harmonics.size(); k++)
             {
                 const size_t l = encoder.getHarmonicDegree(k);
                 harmonics[k] *= double(2. * l + 1.);
             }
+            
+            Signal<double>::add(harmonics.size(), harmonics.data(), output_buffer);
         };
         
-        for(auto& response : m_responses)
+        const double number_of_responses = getNumberOfResponses();
+        
+        for(auto const& response : m_responses)
         {
             encoder.setAzimuth(response.getAzimuth());
             encoder.setElevation(response.getElevation());
+            
             for(size_t j = 0; j < getResponsesSize(); j++)
             {
-                const double left = response.getSample(0, j) / double(getNumberOfResponses());
-                encoder.process(&left, harmonics.data());
-                normalize();
-                Signal<double>::add(harmonics.size(), harmonics.data(),
-                                    m_left.data() + j * harmonics.size());
+                const auto index = j * harmonics.size();
                 
-                const double right = response.getSample(1, j) / double(getNumberOfResponses());
-                encoder.process(&right, harmonics.data());
-                normalize();
-                Signal<double>::add(harmonics.size(), harmonics.data(),
-                                    m_right.data() + j * harmonics.size());
+                const double left = response.getSample(0, j) / number_of_responses;
+                processSample(left, m_left.data() + index);
+                
+                const double right = response.getSample(1, j) / number_of_responses;
+                processSample(right, m_right.data() + index);
             }
         }
     }
