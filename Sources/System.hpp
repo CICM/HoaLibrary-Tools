@@ -125,6 +125,8 @@ namespace hoa
         {
         public:
             
+            Folder() = default;
+            
             Folder(std::string const& path,
                    std::string const& name)
             : m_name(formatName(name))
@@ -142,13 +144,24 @@ namespace hoa
                 m_path.swap(other.m_path);
             }
             
+            Folder& operator=(Folder other)
+            {
+                std::swap(m_name, other.m_name);
+                std::swap(m_path, other.m_path);
+                return *this;
+            }
+            
             ~Folder() = default;
             
             std::string const& getName() const noexcept {return m_name;}
             std::string const& getPath() const noexcept {return m_path;}
             std::string getFullName() const {return m_path + m_name;}
             
-            bool isValid() const noexcept {return System::isValid(getFullName());}
+            bool isValid() const noexcept
+            {
+                return (!m_name.empty() && !m_path.empty()
+                        && System::isValid(getFullName()));
+            }
             
             std::vector<File> getFiles(const std::string& type) const
             {
