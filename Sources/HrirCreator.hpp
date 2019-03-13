@@ -17,6 +17,25 @@
 
 namespace hoa::hrir_matrix_creator
 {
+    enum class HrirDatabase
+    {
+        Listen = 0,
+        Sadie
+    };
+    
+    struct Config
+    {
+        size_t order = 0;
+        System::Folder wave_folder {};
+        std::string filename_prefix = "Hoa_Hrir_";
+        std::string file_extension = ".hpp";
+        std::string output_directory = "./";
+        std::string output_file_name {};
+        std::string classname {};
+        Dimension dimension = Dimension::Hoa2d;
+        HrirDatabase database_type = {};
+    };
+    
     // ================================================================================ //
     // Response
     // ================================================================================ //
@@ -27,29 +46,13 @@ namespace hoa::hrir_matrix_creator
     {
     public:
         
-        Response(System::File const& file)
+        Response(System::File const& file, HrirDatabase const& database_type)
         : System::File(file)
         {
-            std::string name = getName();
-            std::string::size_type pos = name.find("_T");
-            
-            if(pos != std::string::npos && pos < name.size() - 2)
+            switch(database_type)
             {
-                if(std::isdigit(name[pos+2]))
-                {
-                    name.erase(name.begin(), name.begin()+long(pos)+2);
-                    m_azimuth = stod(name) / 360. * HOA_2PI;
-                    pos = name.find("_P");
-                    if(pos != std::string::npos && pos < name.size() - 2)
-                    {
-                        if(std::isdigit(name[pos+2]))
-                        {
-                            name.erase(name.begin(), name.begin()+long(pos)+2);
-                            m_elevation = stod(name) / 360. * HOA_2PI;
-                            m_valid = true;
-                        }
-                    }
-                }
+                case HrirDatabase::Listen : { parseListenFile(); break;}
+                case HrirDatabase::Sadie : { parseSadieFile(); break;}
             }
         }
         
@@ -122,6 +125,60 @@ namespace hoa::hrir_matrix_creator
         
     private:
         
+        void parseSadieFile()
+        {
+            // ex: "azi_13,0_ele_-64,8.wav"
+            
+            std::string name = getName();
+            std::string delimiter = "_";
+            
+            size_t pos = 0;
+            std::vector<std::string> tokens;
+            while ((pos = name.find(delimiter)) != std::string::npos)
+            {
+                tokens.emplace_back(name.substr(0, pos));
+                name.erase(0, pos + delimiter.length());
+            }
+            tokens.emplace_back(name);
+            
+            if(tokens.size() == 4 && tokens[0] == "azi" && tokens[2] == "ele")
+            {
+                std::replace(tokens[1].begin(), tokens[1].end(), ',', '.');
+                std::replace(tokens[3].begin(), tokens[3].end(), ',', '.');
+                
+                m_azimuth = std::stod(tokens[1]) / 360. * HOA_2PI;
+                m_elevation = std::stod(tokens[3]) / 360. * HOA_2PI;
+                m_valid = true;
+            }
+        }
+        
+        void parseListenFile()
+        {
+            // ex: IRC_1002_C_R0195_T180_P060.wav
+            
+            std::string name = getName();
+            std::string::size_type pos = name.find("_T");
+            
+            if(pos != std::string::npos && pos < name.size() - 2)
+            {
+                if(std::isdigit(name[pos+2]))
+                {
+                    name.erase(name.begin(), name.begin()+long(pos)+2);
+                    m_azimuth = stod(name) / 360. * HOA_2PI;
+                    pos = name.find("_P");
+                    if(pos != std::string::npos && pos < name.size() - 2)
+                    {
+                        if(std::isdigit(name[pos+2]))
+                        {
+                            name.erase(name.begin(), name.begin()+long(pos)+2);
+                            m_elevation = stod(name) / 360. * HOA_2PI;
+                            m_valid = true;
+                        }
+                    }
+                }
+            }
+        }
+        
         std::vector<double> m_values {};
         double              m_radius = 1.;
         double              m_azimuth = 0.;
@@ -148,9 +205,10 @@ namespace hoa::hrir_matrix_creator
         using processor_t = ProcessorHarmonics<Dim, double>;
         using encoder_t = Encoder<Dim, double>;
         
-        Subject(const size_t order, System::Folder const& folder)
-        : m_processor(order)
-        , m_folder(folder)
+        Subject(Config& config)
+        : m_config(config)
+        , m_processor(config.order)
+        , m_folder(config.wave_folder)
         {}
         
         ~Subject() = default;
@@ -189,11 +247,12 @@ namespace hoa::hrir_matrix_creator
         
         void writeForCPP()
         {
-            const auto filepath_base = "../Results/Hoa_Hrir";
-            const std::string name = getFormattedName();
+            const auto filepath_base = m_config.output_directory;
+            const auto filename_prefix = m_config.filename_prefix;;
             const auto dim_str = (Dim == Hoa2d) ? "2D" : "3D";
-            const auto extension = ".hpp";
-            const auto filename = filepath_base + name + dim_str + extension;
+            const auto classname = m_config.classname + "_" + dim_str;
+            const auto extension = m_config.file_extension;
+            const auto filename = filepath_base + filename_prefix + classname + extension;
             
             std::ofstream file(filename);
             if(!file.is_open())
@@ -211,9 +270,9 @@ namespace hoa::hrir_matrix_creator
             
             file << newline << "#pragma once" << newline << newline;
             
-            file << "namespace hoa" << newline << "{" << newline;
+            file << "namespace hoa { namespace hrir " << newline << "{" << newline;
             
-            file << tab << "struct " << name << "_" << dim_str << newline;
+            file << tab << "struct " << classname << newline;
             file << tab << "{" << newline;
             file << tab << tab << "static const size_t order = " << getDecompositionOrder() << ";\n";
             file << tab << tab << "static const size_t number_of_harmonics = " << getNumberOfHarmonics() << ";\n";
@@ -222,17 +281,18 @@ namespace hoa::hrir_matrix_creator
             
             file << newline;
             
-            writeData<float, BinauralSide::Left>(file, name, m_left);
-            writeData<float, BinauralSide::Right>(file, name, m_right);
-            writeData<double, BinauralSide::Left>(file, name, m_left);
-            writeData<double, BinauralSide::Right>(file, name, m_right);
+            writeData<float, BinauralSide::Left>(file, m_left);
+            writeData<float, BinauralSide::Right>(file, m_right);
+            writeData<double, BinauralSide::Left>(file, m_left);
+            writeData<double, BinauralSide::Right>(file, m_right);
             
-            file << tab << "};\n\n"; // end struct
+            file << tab << "};\n\n"; // end of struct
             
-            file << "}\n"; // end of hoa namespace
+            file << "}}\n"; // end of hoa::hrir namespace
             
             file.close();
-            std::cout << name << " " << dim_str << " response written" << "\n";
+            
+            std::cout << classname << " response written" << "\n";
         }
         
     private: // methods
@@ -252,28 +312,8 @@ namespace hoa::hrir_matrix_creator
             return text;
         }
         
-        std::string getFormattedName()
-        {
-            std::string name = getName();
-            size_t size = name.size();
-            for(size_t i = 1; i < size; i++)
-            {
-                if(name[i] == '_')
-                {
-                    name.erase(name.begin() + long(i));
-                    size--;
-                }
-                else
-                {
-                    name[i] = (char)tolower(name[i]);
-                }
-            }
-            
-            return name;
-        }
-        
         template<typename FloatType, BinauralSide Side>
-        void writeData(std::ofstream& file, std::string const& name, std::vector<double>& data)
+        void writeData(std::ofstream& file, std::vector<double>& data)
         {
             file.precision(std::numeric_limits<FloatType>::digits10);
             
@@ -303,6 +343,7 @@ namespace hoa::hrir_matrix_creator
         
     private: // variables
         
+        const Config            m_config;
         const processor_t       m_processor;
         const System::Folder    m_folder;
         std::vector<Response>   m_responses = {};
@@ -320,7 +361,7 @@ namespace hoa::hrir_matrix_creator
     {
         for(auto file : m_folder.getFiles(".wav"))
         {
-            Response temp(file);
+            Response temp(file, m_config.database_type);
             if(temp.isValid() && temp.getElevation() == 0)
             {
                 m_responses.push_back(temp);
@@ -375,7 +416,7 @@ namespace hoa::hrir_matrix_creator
     {
         for(auto file : m_folder.getFiles(".wav"))
         {
-            Response temp(file);
+            Response temp(file, m_config.database_type);
             
             if(temp.isValid())
             {
