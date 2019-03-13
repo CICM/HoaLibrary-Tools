@@ -30,5 +30,6 @@ namespace hoa::hrir_matrix_creator
         std::string classname {};
         Dimension dimension = Dimension::Hoa2d;
         HrirDatabase database_type = {};
+        std::string notes {};
     };
 }

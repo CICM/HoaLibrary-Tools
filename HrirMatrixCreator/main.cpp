@@ -53,6 +53,8 @@ int main(int argc, const char * argv[])
         listen_1002C.classname = "Listen_1002C";
         listen_1002C.wave_folder = {Listen_database_path, "IRC_1002_C"};
         
+        listen_1002C.notes = "link: ftp://ftp.ircam.fr/pub/IRCAM/equipes/salles/listen/archive/SUBJECTS/IRC_1002.zip";
+        
         // 2D config
         {
             Config config = listen_1002C;
@@ -77,6 +79,8 @@ int main(int argc, const char * argv[])
         sadie_d2.database_type = HrirDatabase::Sadie;
         sadie_d2.classname = "Sadie_D2";
         sadie_d2.wave_folder = {Sadie_database_path + "/D2_HRIR_WAV", "44K_16bit"};
+        
+        sadie_d2.notes = "link: https://www.york.ac.uk/sadie-project/Resources/SADIEIIDatabase/D2/D2_HRIR_WAV.zip";
         
         // 2D config
         {

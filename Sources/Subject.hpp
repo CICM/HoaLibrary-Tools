@@ -94,6 +94,13 @@ namespace hoa::hrir_matrix_creator
             
             file << get_cpp_file_header_text();
             
+            if(!m_config.notes.empty())
+            {
+                file << newline << "/* Notes:\n";
+                file << m_config.notes;
+                file << newline << "*/" << newline;
+            }
+            
             file << newline << "#pragma once" << newline << newline;
             
             file << "namespace hoa { namespace hrir " << newline << "{" << newline;
