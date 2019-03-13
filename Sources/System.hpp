@@ -16,16 +16,17 @@
 #include <unistd.h>
 #include <vector>
 
-namespace hoa
+namespace hoa::hrir_matrix_creator
 {
     class System
     {
     private:
-#ifdef _WIN32
+        
+#       ifdef _WIN32
         static const char separator = '\\';
-#else
+#       else
         static const char separator = '/';
-#endif
+#       endif
         static inline std::string formatName(std::string const& name)
         {
             std::string ntxt = name;
