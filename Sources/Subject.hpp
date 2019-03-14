@@ -101,12 +101,15 @@ namespace hoa::hrir_matrix_creator
                 file << newline << "*/" << newline;
             }
             
+            const auto hoa_dim_str = (Dim == Hoa2d) ? "Dimension::Hoa2d" : "Dimension::Hoa3d";
+            
             file << newline << "#pragma once" << newline << newline;
             
             file << "namespace hoa { namespace hrir " << newline << "{" << newline;
             
             file << tab << "struct " << classname << newline;
             file << tab << "{" << newline;
+            file << tab << tab << "static const Dimension dimension = " << hoa_dim_str << ";\n";
             file << tab << tab << "static const size_t order = " << getDecompositionOrder() << ";\n";
             file << tab << tab << "static const size_t number_of_harmonics = " << getNumberOfHarmonics() << ";\n";
             file << tab << tab << "static const size_t responses_size = " << getResponsesSize() << ";\n";
