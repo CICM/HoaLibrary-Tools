@@ -12,23 +12,6 @@
 using namespace hoa;
 using namespace hrir_matrix_creator;
 
-template<Dimension Dim>
-void writeSubject(Subject<Dim>&& subject)
-{
-    subject.read();
-    subject.writeForCPP();
-}
-
-void writeCppFileForConfig(Config& config);
-void writeCppFileForConfig(Config& config)
-{
-    switch(config.dimension)
-    {
-        case hoa::Hoa2d : { writeSubject<Hoa2d>({config}); break;}
-        case hoa::Hoa3d : { writeSubject<Hoa3d>({config}); break;}
-    }
-}
-
 int main(int argc, const char * argv[])
 {
     std::cout << "Current folder : " << System::getCurrentFolder() << "\n";
