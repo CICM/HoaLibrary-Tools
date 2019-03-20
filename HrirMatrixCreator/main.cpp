@@ -70,6 +70,24 @@ int main(int argc, const char * argv[])
             Config config = sadie_d2;
             config.dimension = Dimension::Hoa2d;
             config.order = 5;
+            
+            config.notes += "\nconfig: https://www.york.ac.uk/sadie-project/Resources/SADIEIIDatabase/Extras/configFiles/O5_2d_sn3d_12circ_pinv_basic.config";
+            
+            config.wave_files = {
+                "azi_0,0_ele_0,0",
+                "azi_30,0_ele_0,0",
+                "azi_60,0_ele_0,0",
+                "azi_90,0_ele_0,0",
+                "azi_120,0_ele_0,0",
+                "azi_150,0_ele_0,0",
+                "azi_180,0_ele_0,0",
+                "azi_210,0_ele_0,0",
+                "azi_240,0_ele_0,0",
+                "azi_270,0_ele_0,0",
+                "azi_300,0_ele_0,0",
+                "azi_330,0_ele_0,0"
+            };
+            
             configs.emplace_back(std::move(config));
         }
         
@@ -78,6 +96,38 @@ int main(int argc, const char * argv[])
             Config config = sadie_d2;
             config.dimension = Dimension::Hoa3d;
             config.order = 3;
+            
+            config.notes += "\nconfig: https://www.york.ac.uk/sadie-project/Resources/SADIEIIDatabase/Extras/configFiles/O3_3d_sn3d_26Leb_pinv_basic.config";
+            
+            config.wave_files = {
+                "azi_0,0_ele_0,0",
+                "azi_180,0_ele_0,0",
+                "azi_90,0_ele_0,0",
+                "azi_270,0_ele_0,0",
+                "azi_0,0_ele_90,0",
+                "azi_0,0_ele_-90,0",
+                "azi_90,0_ele_45,0",
+                "azi_90,0_ele_-45,0",
+                "azi_270,0_ele_45,0",
+                "azi_270,0_ele_-45,0",
+                "azi_0,0_ele_45,0",
+                "azi_0,0_ele_-45,0",
+                "azi_180,0_ele_45,0",
+                "azi_180,0_ele_-45,0",
+                "azi_45,0_ele_0,0",
+                "azi_315,0_ele_0,0",
+                "azi_135,0_ele_0,0",
+                "azi_225,0_ele_0,0",
+                "azi_45,0_ele_35,3",
+                "azi_45,0_ele_-35,3",
+                "azi_315,0_ele_35,3",
+                "azi_315,0_ele_-35,3",
+                "azi_135,0_ele_35,3",
+                "azi_135,0_ele_-35,3",
+                "azi_225,0_ele_35,3",
+                "azi_225,0_ele_-35,3",
+            };
+            
             configs.emplace_back(std::move(config));
         }
     }
