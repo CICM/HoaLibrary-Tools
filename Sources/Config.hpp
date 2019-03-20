@@ -12,6 +12,8 @@
 #include "System.hpp"
 #include "../ThirdParty/HoaLibrary/Sources/Hoa.hpp"
 
+#include <set>
+
 namespace hoa::hrir_matrix_creator
 {
     enum class HrirDatabase
@@ -22,14 +24,16 @@ namespace hoa::hrir_matrix_creator
     
     struct Config
     {
-        size_t order = 0;
-        System::Folder wave_folder {};
-        std::string filename_prefix = "Hoa_Hrir_";
-        std::string file_extension = ".hpp";
-        std::string output_directory = "./";
-        std::string classname {};
-        Dimension dimension = Dimension::Hoa2d;
-        HrirDatabase database_type = {};
-        std::string notes {};
+        size_t order = 0;                           //! required
+        System::Folder wave_folder {};              //! required
+        std::string classname {};                   //! required
+        Dimension dimension = Dimension::Hoa2d;     //! required
+        HrirDatabase database_type = {};            //! required
+        
+        std::string filename_prefix = "Hoa_Hrir_";  //! optional
+        std::string file_extension = ".hpp";        //! optional
+        std::string output_directory = "./";        //! optional
+        std::set<std::string> wave_files = {};      //! optional
+        std::string notes {};                       //! optional
     };
 }
