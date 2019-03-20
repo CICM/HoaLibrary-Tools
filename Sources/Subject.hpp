@@ -11,6 +11,12 @@
 
 #include "Response.hpp"
 
+#include <limits>
+#include <sstream>
+#include <iomanip>
+#include <cmath>
+#include <iostream>
+
 namespace hoa::hrir_matrix_creator
 {
     // ================================================================================ //
@@ -148,6 +154,28 @@ namespace hoa::hrir_matrix_creator
             return text;
         }
         
+        template<typename FloatType>
+        std::string convertFloatingPointNumberToString(FloatType value)
+        {
+            constexpr bool is_float = std::is_same<FloatType, float>::value;
+            
+            if(value == static_cast<FloatType>(0))
+            {
+                return is_float ? "0.f" : "0.";
+            }
+            
+            std::stringstream ss;
+            ss << std::setprecision(std::numeric_limits<FloatType>::max_digits10);
+            ss << value;
+            
+            if constexpr (is_float)
+            {
+                ss << 'f';
+            }
+            
+            return ss.str();
+        }
+        
         template<typename FloatType, BinauralSide Side>
         void writeData(std::ofstream& file, std::vector<double>& data)
         {
@@ -168,7 +196,7 @@ namespace hoa::hrir_matrix_creator
             {
                 // don't add comma for the last value
                 const auto separator = (i < data.size() - 1) ? ", " : "";
-                file << static_cast<FloatType>(*f) << separator;
+                file << convertFloatingPointNumberToString(static_cast<FloatType>(*f)) << separator;
             }
             
             file << "};\n\n";
