@@ -276,6 +276,7 @@
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/../bin/";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(inherited) /usr/local/include ../ThirdParty/HoaLibrary/ThirdParty/Eigen";
 			};
 			name = Debug;
 		};
@@ -287,6 +288,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(inherited) /usr/local/include ../ThirdParty/HoaLibrary/ThirdParty/Eigen";
 			};
 			name = Release;
 		};
